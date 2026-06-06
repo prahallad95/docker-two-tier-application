@@ -195,30 +195,51 @@ Click Submit.
 
 The message will be stored in MySQL and displayed on the page.
 
-# Step 14: To Check if the messages are stored in sql-db
+## Verifying Data Stored in the MySQL Container
 
-Enter the container:
+After submitting messages through the Flask web application, verify that the data has been successfully stored in the MySQL database by following these steps:
 
+### Step 1: Access the MySQL Container
+
+Open an interactive shell inside the running MySQL container:
+
+```bash
 docker exec -it mysql-db bash
+```
 
-Login to MySQL:
+### Step 2: Log in to the MySQL Server
 
+Connect to MySQL using the root user:
+
+```bash
 mysql -u root -p
+```
 
-Enter password:
+When prompted, enter the root password:
 
+```text
 root123
+```
 
-Select the database:
+### Step 3: Select the Application Database
 
+Switch to the database created for the application:
+
+```sql
 USE messagesdb;
+```
 
-View all records:
+### Step 4: View Stored Records
 
+Retrieve all records from the `messages` table:
+
+```sql
 SELECT * FROM messages;
+```
 
-Example output:
+### Example Output
 
+```text
 +----+--------------------------+
 | id | message                  |
 +----+--------------------------+
@@ -226,4 +247,6 @@ Example output:
 |  2 | Docker Networking Test   |
 |  3 | Flask MySQL Connection   |
 +----+--------------------------+
+```
+
 
