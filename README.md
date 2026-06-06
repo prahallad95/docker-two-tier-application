@@ -1,33 +1,76 @@
-# docker-two-tier-application
-Built a two-tier application using Docker, Flask, and MySQL. Created Docker images and containers, configured a custom bridge network for communication between application and database containers, and implemented message storage and retrieval using MySQL. Gained hands-on experience with Docker networking and multi-container deployments.
+# Docker Two-Tier Flask & MySQL Application
 
-# Step 1: Create Project Structure
+## Overview
 
-```bash
-mkdir two-tier-app
-cd two-tier-app
+This project demonstrates a simple two-tier application using Docker, Flask, and MySQL. The application allows users to submit messages through a web interface, which are then stored in a MySQL database and displayed on the webpage.
 
-mkdir templates
+The project focuses on Docker networking concepts such as custom bridge networks, container-to-container communication, and Docker DNS-based service discovery.
 
-touch app.py
-touch requirements.txt
-touch Dockerfile
+---
 
-touch templates/index.html
+## Architecture
+
+```text
++-------------------+
+|   User Browser    |
++---------+---------+
+          |
+          v
++-------------------+
+| Flask Container   |
+| Port: 5000        |
++---------+---------+
+          |
+          | Custom Bridge Network
+          |
+          v
++-------------------+
+| MySQL Container   |
+| messages table    |
++-------------------+
 ```
 
 ---
 
-# Step 2: Flask Application (app.py)
-----> You can get the code from repository.
+## Technologies Used
 
-# Step 3: HTML Page
------> You can get it from templates folder.
+* Docker
+* Python
+* Flask
+* MySQL
+* Linux
 
-# Step 5: Dockerfile
------->----> You can get the code from repository.
+---
 
-# Step 6: Create Custom Bridge Network
+## Key Concepts Demonstrated
+
+* Docker image creation using Dockerfile
+* Container deployment and management
+* Custom bridge network creation
+* Container-to-container communication
+* Docker DNS-based service discovery
+* Flask and MySQL integration
+* Port mapping and application exposure
+* Multi-container application deployment
+
+---
+
+## Project Structure
+
+```text
+two-tier-app/
+│
+├── app.py
+├── Dockerfile
+├── requirements.txt
+│
+└── templates/
+    └── index.html
+```
+
+---
+
+## Create Docker Network
 
 ```bash
 docker network create my-network
@@ -41,7 +84,7 @@ docker network ls
 
 ---
 
-# Step 7: Run MySQL Container
+## Run MySQL Container
 
 ```bash
 docker run -d \
@@ -52,35 +95,23 @@ docker run -d \
 mysql:8.0
 ```
 
-Check:
-
-```bash
-docker ps
-```
-
 ---
 
-# Step 8: Create Table
+## Create Database Table
 
-Enter MySQL container:
+Enter the container:
 
 ```bash
 docker exec -it mysql-db bash
 ```
 
-Login:
+Login to MySQL:
 
 ```bash
 mysql -u root -p
 ```
 
-Password:
-
-```text
-root123
-```
-
-Select database:
+Select the database:
 
 ```sql
 USE messagesdb;
@@ -89,29 +120,15 @@ USE messagesdb;
 Create table:
 
 ```sql
-CREATE TABLE messages(
-id INT AUTO_INCREMENT PRIMARY KEY,
-message VARCHAR(255)
+CREATE TABLE messages (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    message VARCHAR(255)
 );
-```
-
-Verify:
-
-```sql
-SHOW TABLES;
-```
-
-Exit:
-
-```sql
-exit
 ```
 
 ---
 
-# Step 9: Build Flask Image
-
-Inside project directory:
+## Build Flask Image
 
 ```bash
 docker build -t flask-mysql-app .
@@ -119,7 +136,7 @@ docker build -t flask-mysql-app .
 
 ---
 
-# Step 10: Run Flask Container
+## Run Flask Container
 
 ```bash
 docker run -d \
@@ -131,38 +148,29 @@ flask-mysql-app
 
 ---
 
-# Step 11: Verify Networking
+## Verify Container Networking
 
-Inspect network:
+Check network details:
 
 ```bash
 docker network inspect my-network
 ```
 
-You should see:
+Both containers should appear under the network:
 
 ```text
 mysql-db
 flask-app
 ```
 
-attached to the same bridge network.
-
 ---
 
-# Step 12: Test Connectivity
+## Test Connectivity
 
-From Flask container:
+Access Flask container:
 
 ```bash
 docker exec -it flask-app sh
-```
-
-Install ping:
-
-```bash
-apt update
-apt install iputils-ping -y
 ```
 
 Ping MySQL container:
@@ -171,29 +179,59 @@ Ping MySQL container:
 ping mysql-db
 ```
 
-You should get replies.
-
-This proves Docker DNS resolution is working through the custom bridge network.
+Successful replies confirm Docker DNS resolution and network connectivity.
 
 ---
 
-# Step 13: Access Application
+## Access the Application
 
-Open:
+Open a browser and visit:
 
 ```text
 http://localhost:5000
 ```
 
-Enter:
+Enter a message and click **Submit**.
 
-```text
-Hello Docker Networking
+The message will be stored in the MySQL database and displayed on the webpage.
+
+---
+
+## Verify Stored Messages
+
+Connect to MySQL:
+
+```bash
+docker exec -it mysql-db mysql -u root -p
 ```
 
-Click Submit.
+Run:
 
-The message will be stored in MySQL and displayed on the page.
+```sql
+USE messagesdb;
+SELECT * FROM messages;
+```
+
+Example output:
+
+```text
++----+--------------------------+
+| id | message                  |
++----+--------------------------+
+|  1 | Hello Docker             |
+|  2 | Docker Networking Test   |
++----+--------------------------+
+```
+
+---
+
+## Learning Outcomes
+
+* Built a two-tier application using Docker, Flask, and MySQL.
+* Configured a custom Docker bridge network for container communication.
+* Used Docker DNS to connect containers using container names.
+* Implemented database integration between application and database containers.
+* Gained hands-on experience with Docker networking and multi-container deployments.
 
 ## Verifying Data Stored in the MySQL Container
 
@@ -249,4 +287,8 @@ SELECT * FROM messages;
 +----+--------------------------+
 ```
 
+## Author
 
+V. Naga Sai Prahallada Reddy
+
+Aspiring Linux & DevOps Engineer | Docker | Linux | Networking | Cybersecurity
