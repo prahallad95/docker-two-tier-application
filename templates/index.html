@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Docker Two Tier App</title>
+</head>
+<body>
+
+<h2>Message Board</h2>
+
+<form method="POST">
+    <input
+        type="text"
+        name="message"
+        placeholder="Enter Message"
+        required>
+
+    <button type="submit">
+        Submit
+    </button>
+</form>
+
+<hr>
+
+<h3>Stored Messages</h3>
+
+<ul>
+{% for msg in messages %}
+<li>{{ msg[1] }}</li>
+{% endfor %}
+</ul>
+
+</body>
+</html>
